@@ -1,14 +1,6 @@
 const inquirer = require('inquirer');
-// const fs = require('fs');
-// const generatePage = require('./src/page-template.js');
-
-// const pageHTML = generatePage (name,github);
-
-// fs.writeFile('./index.html', pageHTML, err => {
-//     if (err) throw err;
-
-//     console.log('Portfolio complete! Check out index.html to see the output!');
-// });
+const fs = require('fs');
+const generatePage = require('./src/page-template.js');
 
 const promptProject = portfolioData => {
     // If there's no 'projects' array property, create one
@@ -88,57 +80,62 @@ Add a New Project
 };
 
 const promptUser = () => {
-        return inquirer.prompt([{
-                    type: "input",
-                    name: "name",
-                    message: "What is your name?",
-                    validate: nameInput => {
-                        if (nameInput) {
-                            return true;
-                        } else {
-                            console.log("Please enter your name!");
-                            return false;
-                        }
-                    }
-                },
-                {
-                    type: 'input',
-                    name: 'github',
-                    message: 'Enter your GitHub Username',
-                    validate: githubName => {
-                        if (githubName) {
-                            return true;
-                        } else {
-                            console.log("Please enter your  GitHub name!");
-                            return false;
-                        }
-                    }
-                },
-                {
-                    type: 'confirm',
-                    name: 'confirmAbout',
-                    message: 'Would you like to enter some information about yourself for an "About" section?',
-                    default: true
-                },
-                {
-                    type: 'input',
-                    name: 'about',
-                    message: 'Provide some information about yourself:',
-                    when: ({confirmAbout}) => {
-                        if (confirmAbout) {
-                            return true;
-                        } else {
-                            return false;
-                        }
-                    }
+    return inquirer.prompt([{
+            type: "input",
+            name: "name",
+            message: "What is your name?",
+            validate: nameInput => {
+                if (nameInput) {
+                    return true;
+                } else {
+                    console.log("Please enter your name!");
+                    return false;
                 }
-                ]);
-        };
-        // Using Promises, we can chain the functions together using the then() method, as 
-        // shown here:
+            }
+        },
+        {
+            type: 'input',
+            name: 'github',
+            message: 'Enter your GitHub Username',
+            validate: githubName => {
+                if (githubName) {
+                    return true;
+                } else {
+                    console.log("Please enter your  GitHub name!");
+                    return false;
+                }
+            }
+        },
+        {
+            type: 'confirm',
+            name: 'confirmAbout',
+            message: 'Would you like to enter some information about yourself for an "About" section?',
+            default: true
+        },
+        {
+            type: 'input',
+            name: 'about',
+            message: 'Provide some information about yourself:',
+            when: ({
+                confirmAbout
+            }) => {
+                if (confirmAbout) {
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+        }
+    ]);
+};
+// Using Promises, we can chain the functions together using the then() method, as 
+// shown here:
+promptUser()
+    .then(promptProject)
+    .then(portfolioData => {
+        const pageHTML = generatePage (portfolioData);
 
-        promptUser()
-            .then(promptProject)
-            .then(portfolioData => {
-                console.log(portfolioData);
-            });
+        fs.writeFile('./index.html', pageHTML, err => {
+            if (err) throw err;
+        });
+    });

@@ -88,44 +88,57 @@ Add a New Project
 };
 
 const promptUser = () => {
-    return inquirer.prompt([{
-            type: "input",
-            name: "name",
-            message: "What is your name?",
-            validate: nameInput => {
-                if (nameInput) {
-                    return true;
-                } else {
-                    console.log("Please enter your name!");
-                    return false;
+        return inquirer.prompt([{
+                    type: "input",
+                    name: "name",
+                    message: "What is your name?",
+                    validate: nameInput => {
+                        if (nameInput) {
+                            return true;
+                        } else {
+                            console.log("Please enter your name!");
+                            return false;
+                        }
+                    }
+                },
+                {
+                    type: 'input',
+                    name: 'github',
+                    message: 'Enter your GitHub Username',
+                    validate: githubName => {
+                        if (githubName) {
+                            return true;
+                        } else {
+                            console.log("Please enter your  GitHub name!");
+                            return false;
+                        }
+                    }
+                },
+                {
+                    type: 'confirm',
+                    name: 'confirmAbout',
+                    message: 'Would you like to enter some information about yourself for an "About" section?',
+                    default: true
+                },
+                {
+                    type: 'input',
+                    name: 'about',
+                    message: 'Provide some information about yourself:',
+                    when: ({confirmAbout}) => {
+                        if (confirmAbout) {
+                            return true;
+                        } else {
+                            return false;
+                        }
+                    }
                 }
-            }
-        },
-        {
-            type: 'input',
-            name: 'github',
-            message: 'Enter your GitHub Username',
-            validate: githubName => {
-                if (githubName) {
-                    return true;
-                } else {
-                    console.log("Please enter your  GitHub name!");
-                    return false;
-                }
-            }
-        },
-        {
-            type: 'input',
-            name: 'about',
-            message: 'Provide some information about yourself:'
-        }
-    ]);
-};
-// Using Promises, we can chain the functions together using the then() method, as 
-// shown here:
+                ]);
+        };
+        // Using Promises, we can chain the functions together using the then() method, as 
+        // shown here:
 
-promptUser()
-    .then(promptProject)
-    .then(portfolioData => {
-        console.log(portfolioData);
-    });
+        promptUser()
+            .then(promptProject)
+            .then(portfolioData => {
+                console.log(portfolioData);
+            });
